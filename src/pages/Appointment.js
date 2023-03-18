@@ -1,11 +1,11 @@
-import axios from "axios";
-import { Box, Button, useToast, Stack } from "native-base";
-import { useEffect, useState } from "react";
-import { ScrollView, Text, TextInput, View,Image,ToastAndroid } from "react-native";
-import { apiUrl, baseUrl } from "../utils/baseUrl";
-import {Picker} from '@react-native-picker/picker';
-import Chamber from "../components/Chamber";
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { Picker } from '@react-native-picker/picker';
+import axios from "axios";
+import { Box, Button, Stack, useToast } from "native-base";
+import { useEffect, useState } from "react";
+import { Image, ScrollView, Text, TextInput, ToastAndroid, View } from "react-native";
+import Chamber from "../components/Chamber";
+import { apiUrl, baseUrl } from "../utils/baseUrl";
 
 
 export default function Appointment({route}){
@@ -79,13 +79,21 @@ export default function Appointment({route}){
                     {chambers && chambers.map(chamber=><Chamber key={chamber._id} chamber={chamber}/>)}
                 </View>
             </View>
-            <Box className='my-2'>
+            <Box className='my-2 mb-6'>
                 <Button 
                     onPress={() => {setShow(true)}} 
                     className={chamber.vanue ? `bg-blue-500 mt-2` : `bg-red-500 mt-2`}>
-                        Select Appointment Date
+                        {chamber?.vanue ? 'Change Date' : 'Select Appointment Date'}
                 </Button>
             </Box>
+
+            {chamber?.vanue && <View View className='bg-white rounded-md pb-4'>
+                <View className='-mt-5 bg-blue-200 w-10/12 mx-auto p-1 rounded-md'>
+                    <Text className='text-center text-lg font-bold'>{chamber?.vanue}</Text>
+                    <Text className='text-center'>{chamber?.location}</Text>
+                    <Text className='text-center'>{chamber?.day},{chamber?.date}</Text>
+                </View>
+            </View>}
 
             {show && <DateTimePicker
                         value={date}

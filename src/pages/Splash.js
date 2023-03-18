@@ -4,7 +4,7 @@ import { Image, Text } from 'react-native';
 function Splash({navigation}) {
     useEffect(()=>{
         setTimeout(()=>{
-            navigation.navigate('Doctors');
+            navigation.navigate('Signup');
         },3000)
     })
     return (

@@ -20,8 +20,8 @@ export default function Doctors({navigation}){
         getAllActiveDoctors()
     },[])
     return(
-        <ScrollView>
-            <VStack space='4' className='mx-4 my-2'>
+        <ScrollView className='bg-gray-300'>
+            <VStack space='2' className='mx-4 my-2'>
                 {doctors && doctors.map(doctor=><Doctor key={doctor?._id} {...{doctor,navigation}}/>)}
             </VStack>
         </ScrollView>

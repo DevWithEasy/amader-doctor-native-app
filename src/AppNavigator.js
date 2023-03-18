@@ -7,6 +7,7 @@ import Login from './pages/Login';
 import Profile from './pages/Profile';
 import Signup from './pages/Signup';
 import Splash from './pages/Splash';
+import VerifyEmail from './pages/VerifyEmail';
 
 export default function AppNavigator(){
     const Stack = createNativeStackNavigator()
@@ -15,6 +16,7 @@ export default function AppNavigator(){
             <Stack.Navigator>
                 <Stack.Screen name='Spalash' component={Splash} options={{headerShown : false}}/>
                 <Stack.Screen name='Signup' component={Signup}/>
+                <Stack.Screen name='VerifyEmail' component={VerifyEmail}/>
                 <Stack.Screen name='Login' component={Login}/>
                 <Stack.Screen name='Profile' component={Profile}/>
                 <Stack.Screen name='Home' component={Home}/>

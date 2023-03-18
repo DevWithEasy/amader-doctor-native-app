@@ -2,9 +2,8 @@ import axios from 'axios'
 import { useState } from 'react'
 import { Image, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import {apiUrl} from '../utils/baseUrl'
-export default function Login({navigation}){
-    const [email,setEmail] = useState('')
-    const [password,setPassword] = useState('')
+export default function VerifyEmail({navigation}){
+    const [code,setCode] = useState('')
     async function handleSignIn(){
         try {
             const res = await axios.post(`${apiUrl}/auth/signin`,{email,password})
@@ -23,12 +22,11 @@ export default function Login({navigation}){
                     className='mx-auto rounded-full'
                 />
 
-                <TextInput onChangeText={text=>setEmail(text)} className='p-2 border rounded border-gray-300' placeholder='Email or Mobile No'/>
-
-                <TextInput onChangeText={text=>setPassword(text)} className='p-2 border rounded border-gray-300' placeholder='Password'/>
+                <Text className='text-gray-600 text-base'>Verification code :</Text>
+                <TextInput onChangeText={text=>setCode(text)} className='p-2 border rounded border-gray-300' placeholder='code'/>
 
                 <TouchableOpacity className='p-2 bg-blue-400 rounded-md' onPress={()=>handleSignIn()}>
-                    <Text className='text-center text-white text-lg'>Login</Text>
+                    <Text className='text-center text-white text-lg'>Verify</Text>
                 </TouchableOpacity>
 
                 <View className='p-2'>
