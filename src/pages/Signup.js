@@ -1,15 +1,12 @@
 import axios from 'axios'
 import { useState } from 'react'
 import { Image, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import useUserStore from '../features/useStore'
 import { apiUrl } from '../utils/baseUrl'
 export default function Signup({navigation}){
-    const {isAuth} = useUserStore()
     const [name,setName] = useState('')
     const [email,setEmail] = useState('')
     const [phone,setPhone] = useState('')
     const [password,setPassword] = useState('')
-    console.log(isAuth);
     async function handleSignUp(){
         try {
             const res = await axios.post(`${apiUrl}/auth/signup`,{name,email,phone,password})

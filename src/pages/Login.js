@@ -1,16 +1,29 @@
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import axios from 'axios'
+import { Button } from 'native-base'
 import { useState } from 'react'
-import { Image, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import {apiUrl} from '../utils/baseUrl'
+import { Image, Text, TextInput, View } from 'react-native'
+import { useDispatch, useSelector } from 'react-redux'
+import { addAuth, addDoctor, loading } from '../store/slice/authSlice'
+import { apiUrl } from '../utils/baseUrl'
 export default function Login({navigation}){
+    const isLoading = useSelector(state=>state.auth.isLoading)
+    const dispatch = useDispatch()
     const [email,setEmail] = useState('')
     const [password,setPassword] = useState('')
     async function handleSignIn(){
         try {
+            dispatch(loading(true))
             const res = await axios.post(`${apiUrl}/auth/signin`,{email,password})
-            
-            console.log(res.data);
+            if(res.data.status === 200){
+                dispatch(loading(false))
+
+                dispatch(addAuth(res.data.data))
+                await AsyncStorage.setItem('token',`Bearer ${res.data.data.token}`)
+                navigation.navigate('Home')
+            }
         } catch (error) {
+            dispatch(loading(false))
             console.log(error);
         }
     }
@@ -27,9 +40,9 @@ export default function Login({navigation}){
 
                 <TextInput onChangeText={text=>setPassword(text)} className='p-2 border rounded border-gray-300' placeholder='Password'/>
 
-                <TouchableOpacity className='p-2 bg-blue-400 rounded-md' onPress={()=>handleSignIn()}>
-                    <Text className='text-center text-white text-lg'>Login</Text>
-                </TouchableOpacity>
+                <Button className='p-2 bg-blue-400 rounded-md' onPress={()=>handleSignIn()}>
+                    {isLoading ? 'Please wait...' : 'Login'}
+                </Button>
 
                 <View className='p-2'>
                     <Text className='text-center'>You aren't an account ?</Text>

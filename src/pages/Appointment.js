@@ -4,18 +4,41 @@ import axios from "axios";
 import { Box, Button, Stack, useToast } from "native-base";
 import { useEffect, useState } from "react";
 import { Image, ScrollView, Text, TextInput, ToastAndroid, View } from "react-native";
+import { useSelector } from 'react-redux';
 import Chamber from "../components/Chamber";
 import { apiUrl, baseUrl } from "../utils/baseUrl";
+import getToken from '../utils/getToken';
+import selectedDay from '../utils/selectedDay';
 
 
-export default function Appointment({route}){
-    const toast = useToast();
-    const [gender,setGender] = useState()
+export default function Appointment({route,navigation}){
+    const toast = useToast()
+    const user = useSelector(state=>state.auth.user)
     const {doctor,image}=(route.params)
     const [chambers,setChambers] = useState([])
     const [chamber,setChamber] = useState({})
     const [date, setDate] = useState(new Date(Date.now()));
     const [show, setShow] = useState(false);
+    const [token,setToken] = useState()
+
+    const [name,setName] = useState(user?.name)
+    const [age,setAge] = useState('')
+    const [gender,setGender] = useState(user?.gender)
+    const [patientPhone,setPatientPhone] = useState(user?.phone)
+    const [address,setAddress] = useState(user?.address?.location && user?.address?.post_office && user?.address?.upazilla && user?.address?.district ? `${user.address.location}, ${user.address.post_office}, ${user.address.upazilla}, ${user.address.district}.` : '',)
+
+    const appointmentData = {
+        patientName: name,
+        age,
+        patientPhone,
+        gender:gender,
+        address,
+        doctorId : doctor?._id,
+        chamberId : chamber?._id,
+        appointmentDay : chamber?.day,
+        appointmentDate : date
+    }
+
     async function getChambers(){
         try{
             const res = await axios.get(`${apiUrl}/doctor/findChambers/${doctor?._id}`)
@@ -31,36 +54,29 @@ export default function Appointment({route}){
         setDate(currentDate);
     };
 
-    function selectedDay(selected){
-        const date = new Date(selected);
-        const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-        const dayName = daysOfWeek[date.getDay()];
-        const days = chambers.map(chamber=> chamber.day)
-        const day = days.find(day => day === dayName)
-        const chamber = chambers.find(chamber=>chamber.day === day)
-        if(day === undefined){
-            setChamber({})
-            ToastAndroid.showWithGravity(
-                'Please select a date from calender chamber list day name available',
-                ToastAndroid.SHORT,
-                ToastAndroid.CENTER,
-              );
-        }else{
-            setChamber({...chamber,date : date.toLocaleDateString()}) 
+    async function addAppointment(){
+        const res = await axios.post(`${apiUrl}/appointment/add`,appointmentData,{
+            headers : {
+                authorization : token
+            }
+        })
+        if(res.data.status === 200){
+            navigation.navigate('Main')
         }
     }
 
+
     useEffect(()=>{
         getChambers()
+        getToken(setToken)
     },[])
 
     useEffect(()=>{
-        selectedDay(date)
+        selectedDay(date,chambers,setChamber,toast)
     },[date])
-
-    console.log(chamber);
+    
     return(
-        <ScrollView className='bg-gray-300 px-4 py-2  space-y-2'>
+        <ScrollView className='bg-gray-200 px-2 py-2  space-y-2'>
             <Stack direction='row' space='2' className='bg-white rounded-md p-3'>
                 <Box>
                     <Image source={{uri : `${baseUrl}${image}`}} className='w-[100px] h-[100px] mx-auto rounded-md'/>
@@ -109,11 +125,20 @@ export default function Appointment({route}){
                     </View>
                     <View className='space-y-1'>
                         <Text>Patient Name : </Text>
-                        <TextInput className='p-2 border border-gray-200 rounded-md' placeholder='Robiul Awal'/>
+                        <TextInput
+                            onChangeText={text=>setName(text)}
+                            className='p-2 border border-gray-200 rounded-md' 
+                            value={name}
+                        />
                     </View>
                     <View className='space-y-1'>
                         <Text>Patient Age : </Text>
-                        <TextInput className='p-2 border border-gray-200 rounded-md' placeholder='27'/>
+                        <TextInput
+                            onChangeText={text=>setAge(text)} 
+                            className='p-2 border border-gray-200 rounded-md' 
+                            value={age}
+                            placeholder='Patient Age'
+                        />
                     </View>
                     <View className='space-y-1'>
                         <Text>Patient Gender : </Text>
@@ -133,15 +158,23 @@ export default function Appointment({route}){
                     </View>
                     <View className='space-y-1'>
                         <Text>Patient Mobile No : </Text>
-                        <TextInput className='p-2 border border-gray-200 rounded-md' placeholder='01717640000'/>
+                        <TextInput
+                            onChangeText={text=>setPatientPhone(text)} 
+                            className='p-2 border border-gray-200 rounded-md' 
+                            value={patientPhone}
+                        />
                     </View>
                     <View className='space-y-1'>
                         <Text>Patient Address : </Text>
-                        <TextInput className='p-2 border border-gray-200 rounded-md' placeholder='Bangrol,Motra Hat,Thakurgaon Sadar Thakurgaon'/>
+                        <TextInput
+                            onChangeText={text=>setAddress(text)}
+                            className='p-2 border border-gray-200 rounded-md' 
+                            value={address}
+                        />
                     </View>
                     <Box className='my-2'>
                         <Button 
-                            onPress={() => navigation.navigate('Appointment',{doctor})} 
+                            onPress={() => addAppointment()} 
                             className='bg-green-500 mt-2'>
                             Book Appointment
                         </Button>

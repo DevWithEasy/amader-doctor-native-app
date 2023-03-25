@@ -1,10 +1,12 @@
 import axios from "axios";
 import { Box, Button, Stack } from "native-base";
 import { useEffect, useState } from "react";
-import { Image, Text } from "react-native";
+import { Image, Text,ToastAndroid } from "react-native";
+import { useSelector } from "react-redux";
 import { apiUrl, baseUrl } from "../utils/baseUrl";
 
 export  default function Doctor(props){
+    const isAuth = useSelector(state=>state.auth.isAuth)
     const{doctor,navigation} = props
     const [user,setUser] = useState({})
     async function getUser(){
@@ -15,6 +17,24 @@ export  default function Doctor(props){
             console.log(err);
         }
     }
+
+    function goAppointment(navigation,doctorData){
+        if(isAuth){
+            navigation.navigate('Appointment',doctorData)
+        }else{
+            ToastAndroid.showWithGravity(
+                'Please login first',
+                ToastAndroid.SHORT,
+                ToastAndroid.CENTER,
+            );
+        }
+    }
+
+
+
+
+
+
     useEffect(()=>{
         getUser()
     },[])
@@ -31,7 +51,7 @@ export  default function Doctor(props){
                 <Text className=''>Experience of {doctor?.experience} years</Text>
                 <Text className=''>{doctor?.designation} of {doctor?.workedAt} </Text>
                 <Text className=''>Consultation Fee : {doctor?.feesPerConsultation} Tk</Text>
-                <Button onPress={() => navigation.navigate('Appointment',{doctor, image : user?.image?.url})} 
+                <Button onPress={() => goAppointment(navigation,{doctor, image : user?.image?.url})} 
                     className='bg-green-500'>
                         Book Appointment
                 </Button>
