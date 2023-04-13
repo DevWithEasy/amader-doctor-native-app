@@ -8,9 +8,11 @@ import Hospitals from "../pages/Hospitals";
 import Login from "../pages/Login";
 import Signup from "../pages/Signup";
 import BottomTabNavigator from "./BottomTabNavigator";
+import AppointmentsAllPatientSeach from "../pages/AppointmentsAllPatientSeach";
+import AppointmentsAllPatient from "../pages/AppointmentsAllPatient";
 
 export default function DrawerNavigator(){
-    const {isAuth} = useSelector(state=>state.auth)
+    const {isAuth,user} = useSelector(state=>state.auth)
     const Drawer = createDrawerNavigator()
     return(
         <Drawer.Navigator>
@@ -42,6 +44,13 @@ export default function DrawerNavigator(){
                     )
                 }}
             />
+            {user?.isDoctor && <Drawer.Screen name='All Appointments' component={AppointmentsAllPatient}
+                options={{
+                    drawerIcon : ({focused,color,size})=>(
+                        <Icon name='search' size={18} color={color}/>
+                    )
+                }}
+            />}
             {!isAuth && <Drawer.Screen name='Signup' component={Signup}
                 options={{
                     drawerIcon : ({focused,color,size})=>(

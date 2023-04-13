@@ -41,7 +41,7 @@ export default function Login({navigation}){
                 <TextInput onChangeText={text=>setPassword(text)} className='p-2 border rounded border-gray-300' placeholder='Password'/>
 
                 <Button className='p-2 bg-blue-400 rounded-md' onPress={()=>handleSignIn()}>
-                    {isLoading ? 'Please wait...' : 'Login'}
+                    Login
                 </Button>
 
                 <View className='p-2'>
