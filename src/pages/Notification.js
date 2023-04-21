@@ -76,7 +76,13 @@ export default function Notifiaction({navigation}) {
                 {
                     notifications && !readState && notifications.filter(notification=>notification.status === 'unread').map((notification,i)=><TouchableOpacity
                         key={i} 
-                        onPress={()=>{navigation.navigate(notification.onClickPath === '/appointments' ? 'Appointments' : 'All Appointments',{path : notification?.onClickPath});seenNotification(notification)}} 
+                        onPress={()=>navigation.navigate(
+                            notification.onClickPath === '/appointments' ?
+                             'Appointments' : 
+                             'All Appointments Search',{
+                                day :notification?.day,date : notification?.date,token
+                            }
+                        )}
                         className='block w-full p-1 border border-gray-300 rounded'
                     >
                         <Text>{notification?.message}</Text>

@@ -1,5 +1,6 @@
 import axios from "axios";
 import { Button, HStack, Stack } from "native-base";
+import Icon from "react-native-vector-icons/Ionicons";
 import { useEffect, useState } from "react";
 import { ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,7 +10,7 @@ import { apiUrl } from "../utils/baseUrl";
 
 export default function Dashboard({route,navigation}) {
     const dispatch = useDispatch()
-    const {user} = useSelector(state => state.auth)
+    const {user,doctor} = useSelector(state => state.auth)
     async function getDoctor(){
         try{
             const res = await axios.get(`${apiUrl}/doctor/find/${user?._id}`,{
@@ -30,19 +31,23 @@ export default function Dashboard({route,navigation}) {
     const data=[
         {
             title : 'Professional Information',
-            path : 'Information'
+            path : 'Information',
+            icon : <Icon name='information-circle-outline' size={18}/>
         },
         {
             title : 'Chamber List',
-            path : 'Chambers'
+            path : 'Chambers',
+            icon : <Icon name='business-outline' size={18}/>
         },
         {
             title : 'Payment',
-            path : 'Payment'
+            path : 'Payment',
+            icon : <Icon name='wallet-outline' size={18}/>
         },
         {
             title : 'Payment History',
-            path : 'Payment History'
+            path : 'Payment History',
+            icon : <Icon name='layers-outline' size={18}/>
         }
     ]
     
@@ -51,10 +56,11 @@ export default function Dashboard({route,navigation}) {
             <View className='space-y-1'>
                 {data.map((d,i)=><TouchableOpacity 
                     key={i}
-                    className='p-1 bg-blue-500 rounded-md'
+                    className='bg-blue-500 rounded-md flex-1 flex-row items-center space-x-1'
                     onPress={()=>navigation.navigate(d.path)}
                 >
-                    <Text className='p-2 text-white'>{d.path}</Text>
+                    <Text className='text-white'>{d.icon}</Text>
+                    <Text className='text-white p-2'>{d.path}</Text>
                 </TouchableOpacity>)}
             </View>
         </ScrollView>

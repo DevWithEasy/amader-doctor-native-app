@@ -2,24 +2,24 @@ import axios from "axios";
 import { Stack } from "native-base";
 import { Text, TouchableOpacity, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { refresh } from "../../store/slice/authSlice";
+import { addDoctor, refresh } from "../../store/slice/authSlice";
 import { apiUrl } from "../../utils/baseUrl";
 
 export default function DeleteChamber(props){
-    const {id,CDelete,setCDelete} = props
+    const {chamber,CDelete,setCDelete} = props
     const dispatch = useDispatch()
-    const {user} = useSelector(state => state.auth)
+    const {user,doctor} = useSelector(state => state.auth)
 
     async function deleteChamber(){
         try {
-            const res = await axios.delete(`${apiUrl}/doctor/deleteChamber/${id}`,{
+            const res = await axios.put(`${apiUrl}/doctor/deleteChamber/?dId=${doctor._id}&cId=${chamber.id}`,{},{
                 headers : {
                     authorization : `Bearer ${user?.token}`
                 }
             })
-            console.log(res.data)
+
             if(res.data.status === 200){
-                dispatch(refresh(Math.random()))
+                dispatch(addDoctor(res.data.data))
                 setCDelete(!CDelete)
             }
         } catch (error) {

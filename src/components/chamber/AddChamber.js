@@ -5,7 +5,7 @@ import { HStack, Stack } from 'native-base';
 import React, { useState } from 'react';
 import { Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { refresh } from '../../store/slice/authSlice';
+import { addDoctor } from '../../store/slice/authSlice';
 import { apiUrl } from '../../utils/baseUrl';
 export default function AddChamber(props){
     const {add,setAdd} =props
@@ -45,10 +45,9 @@ export default function AddChamber(props){
                     }
                 }
             )
-            console.log(res.data)
 
             if(res.data.status === 200){
-                dispatch(refresh(Math.random()))
+                dispatch(addDoctor(res.data.data))
                 setAdd(!add)
             }
         } catch (error) {

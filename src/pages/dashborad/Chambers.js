@@ -11,28 +11,12 @@ import getAMPM from "../../utils/getAMPM";
 
 export default function Chambers({navigation}){
     const {user,doctor,random} = useSelector(state => state.auth)
-    const [chambers,setChambers] = useState([])
+    const [chamber,setChamber] = useState({})
     const [add,setAdd] = useState(false)
     const [id,setId] = useState('')
     const [update,setUpdate] = useState(false)
     const [CDelete,setCDelete] = useState(false)
-
-    async function getChambers(){
-        try {
-            const res = await axios.get(`${apiUrl}/doctor/findChambers/${doctor?._id}`,{
-                headers : {
-                    authorization : `Bearer ${user?.token}`
-                }
-            })
-            setChambers(res.data.data)
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
-    useEffect(()=>{
-        getChambers()
-    },[random])
+    
     return(
         <ScrollView>
             <View className='mx-4 mt-2 space-y-2 h-screen relative'>
@@ -43,11 +27,11 @@ export default function Chambers({navigation}){
                         {!update ? 'Add Chamber' : 'Update Chamber' }
                 </Button>
                 {add && <AddChamber {...{add,setAdd}}/>}
-                {update && <UpdateChamber {...{id,update,setUpdate}}/>}
-                {CDelete && <DeleteChamber {...{id,CDelete,setCDelete}}/>}
+                {update && <UpdateChamber {...{chamber,update,setUpdate}}/>}
+                {CDelete && <DeleteChamber {...{chamber,CDelete,setCDelete}}/>}
                 <View className='space-y-2'>
                     {
-                        chambers && chambers.map(chamber=><View key={chamber._id} className='p-2 rounded bg-gray-50 space-y-0.5 shadow-md'>
+                        doctor.chambers && doctor.chambers.map(chamber=><View key={chamber.id} className='p-2 rounded bg-gray-50 space-y-0.5 shadow-md'>
                             <Text className='font-bold text-blue-500'>{chamber?.vanue}</Text>
                             <Text className=''>Location : {chamber?.location}</Text>
                             <Stack direction='row'  className=''>
@@ -61,13 +45,13 @@ export default function Chambers({navigation}){
                             <Stack direction='row' className='justify-end gap-x-2'>
                                 <TouchableOpacity 
                                     className='w-3/12 p-2 bg-green-500 rounded-md'
-                                    onPress={()=>{setUpdate(!update);setId(chamber._id)}}
+                                    onPress={()=>{setUpdate(!update);setChamber(chamber)}}
                                 >
                                     <Text className='text-white text-center'>Update</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity
                                     className='w-3/12 p-2 bg-red-500 rounded-md'
-                                    onPress={()=>{setCDelete(!CDelete);setId(chamber._id)}}
+                                    onPress={()=>{setCDelete(!CDelete);setChamber(chamber)}}
                                 >
                                     <Text className='text-white text-center'>Delete</Text>
                                 </TouchableOpacity>

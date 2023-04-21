@@ -8,15 +8,6 @@ import { apiUrl, baseUrl } from "../utils/baseUrl";
 export  default function Doctor(props){
     const isAuth = useSelector(state=>state.auth.isAuth)
     const{doctor,navigation} = props
-    const [user,setUser] = useState({})
-    async function getUser(){
-        try{
-            const res = await axios.get(`${apiUrl}/auth/findUser/${doctor?.userId}`)
-            setUser(res.data.data)
-        }catch(err){
-            console.log(err);
-        }
-    }
 
     function goAppointment(navigation,doctorData){
         if(isAuth){
@@ -30,18 +21,10 @@ export  default function Doctor(props){
         }
     }
 
-
-
-
-
-
-    useEffect(()=>{
-        getUser()
-    },[])
     return(
         <Stack direction='row' space='2' className='bg-white rounded-md p-3'>
             <Box>
-                <Image source={{uri : `${baseUrl}${user?.image?.url}`}} className='w-[100px] h-[100px] mx-auto rounded-md'/>
+                <Image source={{uri : `${baseUrl}${doctor?.user?.image?.url}`}} className='w-[100px] h-[100px] mx-auto rounded-md'/>
             </Box>
             <Box className='space-y-2'>
                 <Text className='text-lg font-bold text-blue-500'>{doctor?.firstName} {doctor?.lastName}</Text>
@@ -51,7 +34,7 @@ export  default function Doctor(props){
                 <Text className=''>Experience of {doctor?.experience} years</Text>
                 <Text className=''>{doctor?.designation} of {doctor?.workedAt} </Text>
                 <Text className=''>Consultation Fee : {doctor?.feesPerConsultation} Tk</Text>
-                <Button onPress={() => goAppointment(navigation,{doctor, image : user?.image?.url})} 
+                <Button onPress={() => goAppointment(navigation,{doctor, image : doctor?.user?.image?.url})} 
                     className='bg-green-500'>
                         Book Appointment
                 </Button>

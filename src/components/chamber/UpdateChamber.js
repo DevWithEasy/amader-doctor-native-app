@@ -2,21 +2,21 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
 import axios from 'axios';
 import { HStack, Stack } from 'native-base';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { refresh } from '../../store/slice/authSlice';
+import { addDoctor, refresh } from '../../store/slice/authSlice';
 import { apiUrl } from '../../utils/baseUrl';
 export default function UpdateChamber(props){
-    const {id,update,setUpdate} =props
+    const {chamber,update,setUpdate} =props
     const dispatch = useDispatch()
-    const {user} = useSelector(state => state.auth)
-    const [vanue,setVanue] = useState('')
-    const [location,setLocation] = useState('')
-    const [day,setDay] = useState('')
+    const {user,doctor} = useSelector(state => state.auth)
+    const [vanue,setVanue] = useState(chamber.vanue)
+    const [location,setLocation] = useState(chamber.location)
+    const [day,setDay] = useState(chamber.day)
     const [date, setDate] = useState(new Date(Date.now()));
-    const [from,setFrom] = useState('')
-    const [to,setTo] = useState('')
+    const [from,setFrom] = useState(chamber.from)
+    const [to,setTo] = useState(chamber.to)
     const [fromView,setFromView]= useState(false)
     const [toView,setToView]= useState(false)
 
@@ -34,25 +34,13 @@ export default function UpdateChamber(props){
         setTo(`${hour}:${minute}`)
         setToView(false);
     }
+    const data = {id : chamber.id,vanue,location,day,from,to}
 
-    async function getChamber(){
-        const res = await axios.get(`${apiUrl}/doctor/findChamber/${id}`,{
-            headers : {
-                authorization : `Bearer ${user?.token}`
-            }
-        })
-        setVanue(res.data.data.vanue)
-        setLocation(res.data.data.location)
-        setDay(res.data.data.day)
-        setFrom(res.data.data.from)
-        setTo(res.data.data.to)
-    }
-
-    async function updateChamber(){
+    async function updateChamber(id,data){
         try {
 
             const res = await axios.put(`${apiUrl}/doctor/updateChamber/${id}`,
-                {vanue,location,day,from,to},
+                data,
                 {
                     headers : {
                         authorization : `Bearer ${user?.token}`
@@ -61,17 +49,13 @@ export default function UpdateChamber(props){
             )
 
             if(res.data.status === 200){
-                dispatch(refresh(Math.random()))
+                dispatch(addDoctor(res.data.data))
                 setUpdate(!update)
             }
         } catch (error) {
             console.log(error);
         }
     }
-
-    useEffect(()=>{
-        getChamber(id)
-    },[id])
     
     return(
         <View className=''>
@@ -119,7 +103,7 @@ export default function UpdateChamber(props){
                         {/* {isLoading ? 'Updating...' : 'Update'} */}
                         <Text className='text-white text-center'>Cancel</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity className='w-3/12 bg-blue-500 p-2 rounded-md' onPress={()=>updateChamber()}>
+                    <TouchableOpacity className='w-3/12 bg-blue-500 p-2 rounded-md' onPress={()=>updateChamber(doctor._id,data)}>
                         {/* {isLoading ? 'Updating...' : 'Update'} */}
                         <Text className='text-white text-center'>Update</Text>
                     </TouchableOpacity>

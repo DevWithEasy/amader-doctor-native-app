@@ -15,12 +15,11 @@ export default function Appointment({route,navigation}){
     const toast = useToast()
     const user = useSelector(state=>state.auth.user)
     const {doctor,image}=(route.params)
-    const [chambers,setChambers] = useState([])
+    // const [chambers,setChambers] = useState(doctor.chambers)
     const [chamber,setChamber] = useState({})
     const [date, setDate] = useState(new Date(Date.now()));
     const [show, setShow] = useState(false);
     const [token,setToken] = useState()
-
     const [name,setName] = useState(user?.name)
     const [age,setAge] = useState('')
     const [gender,setGender] = useState(user?.gender)
@@ -39,14 +38,6 @@ export default function Appointment({route,navigation}){
         appointmentDate : date
     }
 
-    async function getChambers(){
-        try{
-            const res = await axios.get(`${apiUrl}/doctor/findChambers/${doctor?._id}`)
-            setChambers(res.data.data)
-        }catch(err){
-            console.log(err);
-        }
-    }
 
     const onChange = (event, selectedDate) => {
         const currentDate = selectedDate;
@@ -67,12 +58,11 @@ export default function Appointment({route,navigation}){
 
 
     useEffect(()=>{
-        getChambers()
         getToken(setToken)
     },[])
 
     useEffect(()=>{
-        selectedDay(date,chambers,setChamber,toast)
+        selectedDay(date,doctor.chambers,setChamber,toast)
     },[date])
     
     return(
@@ -92,7 +82,7 @@ export default function Appointment({route,navigation}){
             <View className='bg-white rounded-md'>
                 <Text className='text-base font-bold text-center bg-blue-200 p-1 rounded-t-md'>Chambers</Text>
                 <View className='m-2 space-y-2'>
-                    {chambers && chambers.map(chamber=><Chamber key={chamber._id} chamber={chamber}/>)}
+                    {doctor.chambers && doctor.chambers.map(chamber=><Chamber key={chamber.id} chamber={chamber}/>)}
                 </View>
             </View>
             <Box className='my-2 mb-6'>

@@ -36,7 +36,7 @@ export default function Doctors({navigation}){
     useEffect(()=>{
         getAllActiveDoctors()
     },[navigation])
-    console.log(doctors);
+    
     return(
         <ScrollView className='bg-gray-200 mx-2 mt-2 space-y-2'>
             <View className='flex-1 justify-end bg-white rounded-md'>
