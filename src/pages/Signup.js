@@ -2,19 +2,24 @@ import axios from 'axios'
 import { useState } from 'react'
 import { Image, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { apiUrl } from '../utils/baseUrl'
+import { Button, HStack, Spinner } from 'native-base'
 export default function Signup({navigation}){
     const [name,setName] = useState('')
     const [email,setEmail] = useState('')
     const [phone,setPhone] = useState('')
     const [password,setPassword] = useState('')
+    const [loading,setLoading] = useState(false)
     async function handleSignUp(){
+        setLoading(true)
         try {
             const res = await axios.post(`${apiUrl}/auth/signup`,{name,email,phone,password})
-            console.log(res.data)
+            
             if(res.data.status === 200){
+                setLoading(false)
                 navigation.navigate('VerifyEmail')
             }
         } catch (error) {
+            setLoading(false)
             console.log(error)
         }
     }
@@ -38,9 +43,16 @@ export default function Signup({navigation}){
 
                 <TextInput onChangeText={text=>setPassword(text)} className='p-2 border rounded border-gray-300' placeholder='Password'/>
 
-                <TouchableOpacity className='p-2 bg-blue-400 rounded-md' onPress={()=>handleSignUp()}>
-                    <Text className='text-center text-white text-lg'>Create account</Text>
-                </TouchableOpacity>
+                <Button className='p-2 bg-blue-400 rounded-md' onPress={()=>handleSignUp()}>
+                    {loading ? 
+                    <HStack className='space-x-2 items-center'>
+                        <Spinner accessibilityLabel="Loading posts" color='white'/>
+                        <Text className='text-white'>
+                            Please wait...
+                        </Text>
+                    </HStack>
+                    :'Create account'}
+                </Button>
 
                 <View className='p-2'>
                     <Text className='text-center'>You have already an account ?</Text>

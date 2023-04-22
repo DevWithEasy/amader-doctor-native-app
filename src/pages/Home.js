@@ -16,6 +16,7 @@ export default function Home({navigation}) {
                 style={{ width: 200, height: 200 }}
             />
             <Button onPress={()=>dispatch(removeAuth())}>Logout</Button>
+            {/* <Button onPress={()=>navigation.navigate('Verify Account')}>Verify</Button> */}
         </View>
     );
 }

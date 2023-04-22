@@ -11,6 +11,7 @@ import DrawerNavigator from './DrawerNavigator';
 import Appointments from '../pages/Appointments';
 import AppointmentsAllPatient from '../pages/AppointmentsAllPatient';
 import AppointmentDetails from '../pages/AppointmentDetails';
+import VerifyEmail from '../pages/VerifyEmail';
 
 
 export default function AppNavigator(){
@@ -28,6 +29,7 @@ export default function AppNavigator(){
                 <Stack.Screen name='Chambers' component={Chambers} />
                 <Stack.Screen name='Payment' component={Payment} />
                 <Stack.Screen name='Payment History' component={PaymentHistory} />
+                <Stack.Screen name='Verify Account' component={VerifyEmail} />
             </Stack.Navigator>
         </NavigationContainer>
     )

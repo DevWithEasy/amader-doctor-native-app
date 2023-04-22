@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { useState } from 'react'
 import { Image, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import {apiUrl} from '../utils/baseUrl'
+import { apiUrl } from '../utils/baseUrl'
 export default function VerifyEmail({navigation}){
     const [code,setCode] = useState('')
     async function handleSignIn(){
@@ -25,8 +25,8 @@ export default function VerifyEmail({navigation}){
                 <Text className='text-gray-600 text-base'>Verification code :</Text>
                 <TextInput onChangeText={text=>setCode(text)} className='p-2 border rounded border-gray-300' placeholder='code'/>
 
-                <TouchableOpacity className='p-2 bg-blue-400 rounded-md' onPress={()=>handleSignIn()}>
-                    <Text className='text-center text-white text-lg'>Verify</Text>
+                <TouchableOpacity className='bg-blue-400 rounded-md p-3' onPress={()=>handleSignIn()}>
+                    <Text className='text-center text-white'>Verify</Text>
                 </TouchableOpacity>
 
                 <View className='p-2'>

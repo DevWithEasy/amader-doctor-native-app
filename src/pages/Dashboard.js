@@ -56,7 +56,7 @@ export default function Dashboard({route,navigation}) {
             <View className='space-y-1'>
                 {data.map((d,i)=><TouchableOpacity 
                     key={i}
-                    className='bg-blue-500 rounded-md flex-1 flex-row items-center space-x-1'
+                    className='bg-blue-500 rounded-md flex-1 flex-row items-center space-x-1 p-2'
                     onPress={()=>navigation.navigate(d.path)}
                 >
                     <Text className='text-white'>{d.icon}</Text>

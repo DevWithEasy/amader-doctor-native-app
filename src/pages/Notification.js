@@ -1,7 +1,7 @@
 import axios from "axios";
 import { Stack } from "native-base";
 import { useEffect, useState } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity, View,ScrollView } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { addAuth } from "../store/slice/authSlice";
 import { apiUrl } from "../utils/baseUrl";
@@ -54,7 +54,8 @@ export default function Notifiaction({navigation}) {
     })
 
     return(
-        <View className='px-2 pt-2 space-y-2'>
+        <ScrollView className='h-screen bg-gray-100'>
+            <View className='px-2 pt-2 space-y-2'>
             <Stack direction='row' className='border-b justify-between border-gray-200 pb-2'>
                 <Stack direction='row' space={2}>
                     <TouchableOpacity onPress={()=>setReadState(!readState)} className={!readState ? 'p-2 border-b-2 border-blue-500 hover:text-blue-500' : 'p-2 border-b-2 border-white hover:text-blue-500'}>
@@ -72,7 +73,7 @@ export default function Notifiaction({navigation}) {
                 </TouchableOpacity>}
             </Stack>
 
-            <View>
+            <View className='space-y-1'>
                 {
                     notifications && !readState && notifications.filter(notification=>notification.status === 'unread').map((notification,i)=><TouchableOpacity
                         key={i} 
@@ -83,7 +84,7 @@ export default function Notifiaction({navigation}) {
                                 day :notification?.day,date : notification?.date,token
                             }
                         )}
-                        className='block w-full p-1 border border-gray-300 rounded'
+                        className='block w-full p-2 border border-gray-300 rounded'
                     >
                         <Text>{notification?.message}</Text>
                     </TouchableOpacity>)
@@ -105,6 +106,7 @@ export default function Notifiaction({navigation}) {
                     </TouchableOpacity>)
                 }
             </View>
-        </View>
+            </View>
+        </ScrollView>
     )
 }

@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import axios from 'axios'
-import { Button } from 'native-base'
+import { Button, HStack, Spinner } from 'native-base'
 import { useState } from 'react'
 import { Image, Text, TextInput, View } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
@@ -8,22 +8,23 @@ import { addAuth, addDoctor, loading } from '../store/slice/authSlice'
 import { apiUrl } from '../utils/baseUrl'
 export default function Login({navigation}){
     const isLoading = useSelector(state=>state.auth.isLoading)
+    const [loading,setLoading] = useState(false)
     const dispatch = useDispatch()
     const [email,setEmail] = useState('')
     const [password,setPassword] = useState('')
     async function handleSignIn(){
         try {
-            dispatch(loading(true))
+            setLoading(true)
             const res = await axios.post(`${apiUrl}/auth/signin`,{email,password})
             if(res.data.status === 200){
-                dispatch(loading(false))
+                setLoading(false)
 
                 dispatch(addAuth(res.data.data))
                 await AsyncStorage.setItem('token',`Bearer ${res.data.data.token}`)
                 navigation.navigate('Home')
             }
         } catch (error) {
-            dispatch(loading(false))
+            setLoading(false)
             console.log(error);
         }
     }
@@ -41,7 +42,14 @@ export default function Login({navigation}){
                 <TextInput onChangeText={text=>setPassword(text)} className='p-2 border rounded border-gray-300' placeholder='Password'/>
 
                 <Button className='p-2 bg-blue-400 rounded-md' onPress={()=>handleSignIn()}>
-                    Login
+                    {loading ? 
+                    <HStack className='space-x-2 items-center'>
+                        <Spinner accessibilityLabel="Loading posts" color='white'/>
+                        <Text className='text-white'>
+                            Please wait...
+                        </Text>
+                  </HStack>
+                    :'Login'}
                 </Button>
 
                 <View className='p-2'>
