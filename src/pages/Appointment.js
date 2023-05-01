@@ -62,43 +62,50 @@ export default function Appointment({route,navigation}){
     },[])
 
     useEffect(()=>{
-        selectedDay(date,doctor.chambers,setChamber,toast)
+        selectedDay(date,doctor.chambers,setChamber,ToastAndroid)
     },[date])
     
     return(
-        <ScrollView className='bg-gray-200 px-2 py-2  space-y-2'>
-            <Stack direction='row' space='2' className='bg-white rounded-md p-3'>
+        <ScrollView className='bg-white px-2 py-2  space-y-2'>
+            <Stack direction='row' space='2' className='border border-blue-200 rounded-md p-2'>
                 <Box>
-                    <Image source={{uri : `${baseUrl}${image}`}} className='w-[100px] h-[100px] mx-auto rounded-md'/>
+                    <Image source={{uri : `${baseUrl}${image}`}} className='w-[80px] h-[80px] mx-auto rounded-md'/>
                 </Box>
                 <Box className='space-y-2'>
                     <Text className='text-lg font-bold text-blue-500'>{doctor?.firstName} {doctor?.lastName}</Text>
                     <Text className=''>{doctor?.education}</Text>
                     <Text className=''>{doctor?.specialization}</Text>
                     <Text className=''>{doctor?.experienceArea}</Text>
+                    <Text className=''>Experience of {doctor?.experience} years</Text>
+                    <Text className=''>{doctor?.designation} of {doctor?.workedAt} </Text>
                     <Text className=''>Consultation Fee : {doctor?.feesPerConsultation} Tk</Text>
                 </Box>
             </Stack>
-            <View className='bg-white rounded-md'>
-                <Text className='text-base font-bold text-center bg-blue-200 p-1 rounded-t-md'>Chambers</Text>
+            <View className='bg-white border border-blue-200 rounded-md'>
+                <Text className='text-center bg-blue-300 p-1 rounded-t-md'>Chambers</Text>
                 <View className='m-2 space-y-2'>
                     {doctor.chambers && doctor.chambers.map(chamber=><Chamber key={chamber.id} chamber={chamber}/>)}
                 </View>
             </View>
-            <Box className='my-2 mb-6'>
+            {!chamber.vanue && <Box className='my-2 mb-6'>
                 <Button 
                     onPress={() => {setShow(true)}} 
                     className={chamber.vanue ? `bg-blue-500 mt-2` : `bg-red-500 mt-2`}>
-                        {chamber?.vanue ? 'Change Date' : 'Select Appointment Date'}
+                        Click Select Appointment Date
                 </Button>
-            </Box>
+            </Box>}
 
-            {chamber?.vanue && <View View className='bg-white rounded-md pb-4'>
-                <View className='-mt-5 bg-blue-200 w-10/12 mx-auto p-1 rounded-md'>
+            {chamber?.vanue && <View View className='bg-blue-200 rounded-md'>
+                <View className='p-1 rounded-md'>
                     <Text className='text-center text-lg font-bold'>{chamber?.vanue}</Text>
                     <Text className='text-center'>{chamber?.location}</Text>
                     <Text className='text-center'>{chamber?.day},{chamber?.date}</Text>
                 </View>
+                <Button 
+                    onPress={() => {setShow(true)}} 
+                    className='bg-blue-300 mt-2'>
+                        Change date
+                </Button>
             </View>}
 
             {show && <DateTimePicker
@@ -106,15 +113,15 @@ export default function Appointment({route,navigation}){
                         onChange={onChange}
             />}
 
-            {chamber.vanue && <View className='bg-white rounded-md space-y-2 mb-5'>
+            {chamber.vanue && <View className='bg-white rounded-md space-y-2 mb-5 border border-blue-200'>
                 <Text className='text-base font-bold text-center bg-blue-200 p-1 rounded-t-md'>Fillup Appoinment Form</Text>
-                <View className='p-2 space-y-1'>
+                <View className='p-2 space-y-2'>
                     <View className='space-y-1'>
-                        <Text>Appointment Date : </Text>
+                        {/* <Text>Appointment Date : </Text> */}
                         <TextInput className='p-2 border border-gray-200 rounded-md' value={new Date(date).toDateString()}/>
                     </View>
                     <View className='space-y-1'>
-                        <Text>Patient Name : </Text>
+                        {/* <Text>Patient Name : </Text> */}
                         <TextInput
                             onChangeText={text=>setName(text)}
                             className='p-2 border border-gray-200 rounded-md' 
@@ -122,7 +129,7 @@ export default function Appointment({route,navigation}){
                         />
                     </View>
                     <View className='space-y-1'>
-                        <Text>Patient Age : </Text>
+                        {/* <Text>Patient Age : </Text> */}
                         <TextInput
                             onChangeText={text=>setAge(text)} 
                             className='p-2 border border-gray-200 rounded-md' 
@@ -131,7 +138,7 @@ export default function Appointment({route,navigation}){
                         />
                     </View>
                     <View className='space-y-1'>
-                        <Text>Patient Gender : </Text>
+                        {/* <Text>Patient Gender : </Text> */}
                         <View className='border border-gray-200 rounded-md'>
                             <Picker
                                 selectedValue={gender}
@@ -147,7 +154,7 @@ export default function Appointment({route,navigation}){
                         </View>
                     </View>
                     <View className='space-y-1'>
-                        <Text>Patient Mobile No : </Text>
+                        {/* <Text>Patient Mobile No : </Text> */}
                         <TextInput
                             onChangeText={text=>setPatientPhone(text)} 
                             className='p-2 border border-gray-200 rounded-md' 
@@ -155,7 +162,7 @@ export default function Appointment({route,navigation}){
                         />
                     </View>
                     <View className='space-y-1'>
-                        <Text>Patient Address : </Text>
+                        {/* <Text>Patient Address : </Text> */}
                         <TextInput
                             onChangeText={text=>setAddress(text)}
                             className='p-2 border border-gray-200 rounded-md' 

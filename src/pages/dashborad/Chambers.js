@@ -6,14 +6,12 @@ import { useSelector } from "react-redux";
 import AddChamber from "../../components/chamber/AddChamber";
 import DeleteChamber from "../../components/chamber/DeleteChamber";
 import UpdateChamber from "../../components/chamber/UpdateChamber";
-import { apiUrl } from "../../utils/baseUrl";
 import getAMPM from "../../utils/getAMPM";
 
 export default function Chambers({navigation}){
-    const {user,doctor,random} = useSelector(state => state.auth)
+    const {doctor} = useSelector(state => state.auth)
     const [chamber,setChamber] = useState({})
     const [add,setAdd] = useState(false)
-    const [id,setId] = useState('')
     const [update,setUpdate] = useState(false)
     const [CDelete,setCDelete] = useState(false)
     

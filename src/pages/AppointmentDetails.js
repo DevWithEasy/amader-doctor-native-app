@@ -12,7 +12,10 @@ import icon from '../../assets/images/splash.png'
 export default function AppointmentDetails({route}){
     const {id,token} = route.params
     const [appointment,setAppointment] = useState({})
-    const [selectedPrinter, setSelectedPrinter] =useState();
+    const [chamber,setChamber] = useState({})
+    const [selectedPrinter, setSelectedPrinter] =useState()
+    const [status,setStatus] = useState({})
+    const [loading,setLoading] = useState(false)
 
     const html = `
     <!DOCTYPE html>
@@ -101,24 +104,24 @@ export default function AppointmentDetails({route}){
                   style="padding-left: 1rem; padding-right: 1rem; padding-top: 1.25rem; padding-bottom: 1.25rem; margin-top: 0.5rem;"
                 >
                   <span style="font-weight: 700;"
-                    >Dr . ${appointment?.firstName} ${appointment?.lastName}</span
+                    >Dr . ${appointment?.doctor?.firstName} ${appointment?.doctor?.lastName}</span
                   >
                   <br />
                   <br />
-                  <span>${appointment?.vanue}</span>
+                  <span>${chamber?.vanue}</span>
                   <br />
-                  <span>${appointment?.location}</span>
+                  <span>${chamber?.location}</span>
                 </td>
                 <td
                   style="padding-left: 1.5rem; padding-right: 1.5rem; padding-top: 2.5rem; padding-bottom: 2.5rem;"
                 >
-                  <span>= ${appointment?.feesPerConsultation}/- Tk</span>
+                  <span>= ${appointment?.doctor?.feesPerConsultation}/- Tk</span>
                 </td>
               </tr>
             </tbody>
           </table>
           <div>
-            <p>Submited by : <span style>${appointment?.submitedBy}</span></p>
+            <p>Submited by : <span style>${appointment?.user?.name}</span></p>
             <p>
               Submited on :
               <span>${dateGenerator(appointment?.createdAt)}</span
@@ -155,7 +158,28 @@ export default function AppointmentDetails({route}){
             }
         })
         setAppointment(res.data.data)
+        setChamber(res.data.data.doctor.chambers.find(c => c.id === res.data.data.chamberId))
     }
+
+    async function getAppointmentStatus(){
+      setLoading(true)
+      try {
+          const res = await axios.get(`${apiUrl}/appointment/status?dId=${appointment?.doctor?._id}&date=${appointment?.appointmentDate}&aId=${appointment?._id}`,{
+            headers : {
+              authorization : token
+            }
+          })
+
+          if(res.data.status === 200){
+              setLoading(false)
+              setStatus(res.data)
+          }
+      } catch (error) {
+          setLoading(false)
+          console.log(error)
+      }
+    }
+
     useEffect(()=>{
         getAppointmentDetails(id)
     },[id])
@@ -186,7 +210,7 @@ export default function AppointmentDetails({route}){
                 </HStack>
                 <HStack>
                     <Text>Patient Mobile : </Text>
-                    <Text>{appointment?.phone}</Text>
+                    <Text>{appointment?.patientPhone}</Text>
                 </HStack>
                 <HStack>
                     <HStack className='w-1/2'>
@@ -206,19 +230,19 @@ export default function AppointmentDetails({route}){
                 </HStack>
                 <HStack className='p-2'>
                     <View className='w-8/12'>
-                        <Text className='font-bold mb-2'>Dr. {appointment?.firstName} {appointment?.lastName}</Text>
-                        <Text>{appointment?.vanue}</Text>
-                        <Text>{appointment?.location}</Text>
+                        <Text className='font-bold mb-2'>Dr. {appointment?.doctor?.firstName} {appointment?.doctor?.lastName}</Text>
+                        <Text>{chamber?.vanue}</Text>
+                        <Text>{chamber?.location}</Text>
                     </View>
                     <View className='w-4/12 flex-1 items-center justify-center'>
-                        <Text>= {appointment?.feesPerConsultation} /- Tk</Text>
+                        <Text> {appointment?.doctor?.feesPerConsultation} /- Tk</Text>
                     </View>
                 </HStack>
             </View>
             <View>
                 <HStack className='w-1/2'>
                     <Text>Submitted by : </Text>
-                    <Text>{appointment?.submitedBy}</Text>
+                    <Text>{appointment?.user?.name}</Text>
                 </HStack>
                 <HStack className='w-1/2'>
                     <Text>Submitted on : </Text>
@@ -226,12 +250,27 @@ export default function AppointmentDetails({route}){
                 </HStack>
             </View>
 
-            <HStack className='flex '>
-              <TouchableOpacity onPress={print}>
-                <Text>Print</Text>
+            {status?.message && <View className='p-2 flex-1 justify-center items-center mt-3'>
+                <Text className={`px-4 py-2 border rounded-full ${status?.position === 0 ? 'border-green-500 ': status?.position === -1 ? 'border-red-500' : 'border-blue-500'}`}>{status?.message}</Text>
+            </View>}
+
+            <HStack className='flex my-3 space-x-2'>
+              <TouchableOpacity 
+              onPress={()=>getAppointmentStatus()}
+              className='p-2 bg-blue-500 rounded-md'
+              >
+                <Text className='text-white text-center'>Check Status</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity onPress={print}
+                className='p-2 border border-blue-500 rounded-md'
+              >
+                <Text>Print Details</Text>
               </TouchableOpacity>
               
-              <TouchableOpacity onPress={printToFile}>
+              <TouchableOpacity onPress={printToFile}
+                className='p-2 border border-blue-500 rounded-md'
+              >
                 <Text>Print and Share</Text>
               </TouchableOpacity>
               

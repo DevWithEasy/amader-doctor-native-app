@@ -7,7 +7,6 @@ import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { apiUrl } from "../utils/baseUrl";
 import dateGenerator from "../utils/dateGenerator";
 import getToken from "../utils/getToken";
-import { Button } from 'react-native';
 
 export default function AppointmentsAllPatient({route,navigation}) {
     const toast = useToast()
@@ -71,13 +70,25 @@ export default function AppointmentsAllPatient({route,navigation}) {
         };
     }
 
-    function handleSort(key,appointments,setResults){
-        setKey(key)
+    async function completeAppointment(id){
+        const res = await axios.put(`/api/appointment/complete/${id}`,{},{
+            headers : {
+                authorization : token
+            }
+        });
+        if(res.data.status === 200){
+            getAppointments()
+        };
+    }
+
+    function handleSort(key){
         if(key === 'Pending'){
             setResults(appointments.filter(appointment=>appointment.status === key))
         }else if(key === 'Confirmed'){
             setResults(appointments.filter(appointment=>appointment.status === key))
         }else if(key === 'Rejected'){
+            setResults(appointments.filter(appointment=>appointment.status === key))
+        }else if(key === 'Completed'){
             setResults(appointments.filter(appointment=>appointment.status === key))
         }else if(key === 'All'){
             setResults(appointments)
@@ -108,43 +119,45 @@ export default function AppointmentsAllPatient({route,navigation}) {
                         <Picker.Item label="Friday" value="Friday" />
                     </Picker>
                 </View>
-                <Button
-                    title={dateGenerator(date)}
+
+                <TouchableOpacity
                     onPress={()=>setShow(!show)} 
                     className='px-4 py-4 border border-gray-200 rounded-md'
-                />
-                <Button
-                    title='Search'
+                >
+                    <Text>{dateGenerator(date)}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
                     onPress={()=>getAppointments()} 
                     className='bg-blue-500 py-3 rounded-md'
-                />
+                >
+                    <Text className='text-white text-center'>Search</Text>
+                </TouchableOpacity>
             </VStack>
             {show && <DateTimePicker
                         value={date}
                         onChange={onChange}
             />}
-            <HStack className='m-2 justify-between border rounded-md border-gray-400 bg-white'>
-                <Button
-                    title='All' 
-                    onPress={()=>handleSort('All',appointments,setResults)} 
-                    className={`px-4 py-2 ${key === 'All' ? 'bg-green-500' : ''}`}
-                />
-                <Button
-                    title='Confirm' 
-                    onPress={()=>handleSort('Confirmed',appointments,setResults)} 
-                    className={`px-4 py-2 border-0 border-l border-gray-400 ${key === 'Confirmed' ? 'bg-green-500' : ''}`}
-                />
-                <Button
-                    title='Pending' 
-                    onPress={()=>handleSort('Pending',appointments,setResults)} 
-                    className={`px-4 py-2 border-0 border-x border-gray-400 ${key === 'Pending' ? 'bg-green-500' : ''}`}
-                />
-                <Button
-                    title='Rejected' 
-                    onPress={()=>handleSort('Rejected',appointments,setResults)} 
-                    className={`px-4 py-2 ${key === 'Rejected' ? 'bg-green-500' : ''}`}
-                />
-            </HStack>
+
+            {appointments.length>0 && <HStack className='w-full flex-1 justify-between my-2 bg-white py-1 rounded-md'>
+                <View className='flex-1 justify-center items-center'>
+                    <Text className='text-center'>{results.length} results found.</Text>
+                </View>
+                <View className='w-1/2 border border-gray-300 rounded-md'>
+                    <Picker
+                        selectedValue={key}
+                        onValueChange={(itemValue, itemIndex) =>{
+                            setKey(itemValue);handleSort(itemValue)
+                        }}
+                    >
+                        <Picker.Item label="All" value="All" />
+                        <Picker.Item label="Completed" value="Completed" />
+                        <Picker.Item label="Confirmed" value="Confirmed" />
+                        <Picker.Item label="Pending" value="Pending" />
+                        <Picker.Item label="Rejected" value="Rejected" />
+                    </Picker>
+                </View>
+            </HStack>}
+
             <View className='space-y-2'>
                 {
                     results && results.map(appointment=><View
@@ -161,26 +174,38 @@ export default function AppointmentsAllPatient({route,navigation}) {
                             <Text className='text-gray-500 text-xs'>
                                 {appointment?.gender} and {appointment?.age} years old.
                             </Text>
-                            <Text className={appointment?.status=== 'Pending'  ? 'text-yellow-500 border border-yellow-500 w-24 text-center rounded-full my-1 py-0.5' :  appointment?.status=== 'Confirmed' ? 'text-green-500 border border-green-500 w-24 text-center rounded-full my-1 py-0.5' : 'text-red-500 border border-red-500 w-24 text-center rounded-full my-1 py-0.5'}>
+                            <Text className={appointment?.status=== 'Pending'  ?
+                             'text-yellow-500 border border-yellow-500 w-24 text-center rounded-full my-1 py-0.5' :
+                               appointment?.status=== 'Confirmed' ? 'text-blue-500 border border-blue-500 w-24 text-center rounded-full my-1 py-0.5' :
+                               appointment?.status=== 'Completed' ? 'text-green-500 border border-green-500 w-24 text-center rounded-full my-1 py-0.5' : 'text-red-500 border border-red-500 w-24 text-center rounded-full my-1 py-0.5'}>
                                 {appointment?.status}
                             </Text>
                         </View>
                         <HStack className='w-full flex justify-end space-x-1 mt-2'>
-                            <Button
-                                title='Confirm' 
-                                onPress={()=>confirmAppointment(appointment._id)} 
-                                className='bg-blue-500 px-4 py-2 rounded-md'
-                            />
-                            <Button
-                                title='Reject' 
+                            <TouchableOpacity
+                                onPress={()=>completeAppointment(appointment._id)} 
+                                className='bg-green-500 px-4 py-2 rounded-md'
+                            >
+                                <Text className='text-white'>Complete</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                 onPress={()=>confirmAppointment(appointment._id)} 
+                                 className='bg-blue-500 px-4 py-2 rounded-md'
+                            >
+                                <Text className='text-white'>Confirm</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
                                 onPress={()=>rejectAppointment(appointment._id)} 
                                 className='bg-red-500 px-4 py-2 rounded-md'
-                            />
-                            <Button
-                                title='Details' 
+                            >
+                                <Text className='text-white'>Reject</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
                                 onPress={()=>navigation.navigate('Appointment Details',{id : appointment._id,token})} 
                                 className='bg-gray-500 px-4 py-2 rounded-md'
-                            />
+                            >
+                                <Text className='text-white'>Details</Text>
+                            </TouchableOpacity>
                         </HStack>
                     </View>)
                 }

@@ -24,18 +24,18 @@ export  default function Doctor(props){
     return(
         <Stack direction='row' space='2' className='bg-white rounded-md p-3'>
             <Box>
-                <Image source={{uri : `${baseUrl}${doctor?.user?.image?.url}`}} className='w-[100px] h-[100px] mx-auto rounded-md'/>
+                <Image source={{uri : `${baseUrl}${doctor?.user?.image?.url}`}} className='w-[80px] h-[80px] mx-auto rounded-md'/>
             </Box>
             <Box className='space-y-2'>
                 <Text className='text-lg font-bold text-blue-500'>{doctor?.firstName} {doctor?.lastName}</Text>
                 <Text className=''>{doctor?.education}</Text>
                 <Text className=''>{doctor?.specialization}</Text>
                 <Text className=''>{doctor?.experienceArea}</Text>
-                <Text className=''>Experience of {doctor?.experience} years</Text>
+                {/* <Text className=''>Experience of {doctor?.experience} years</Text>
                 <Text className=''>{doctor?.designation} of {doctor?.workedAt} </Text>
-                <Text className=''>Consultation Fee : {doctor?.feesPerConsultation} Tk</Text>
+                <Text className=''>Consultation Fee : {doctor?.feesPerConsultation} Tk</Text> */}
                 <Button onPress={() => goAppointment(navigation,{doctor, image : doctor?.user?.image?.url})} 
-                    className='bg-green-500'>
+                    className='bg-green-500 py-1.5'>
                         Book Appointment
                 </Button>
             </Box>

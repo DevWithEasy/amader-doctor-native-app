@@ -29,11 +29,11 @@ export default function Login({navigation}){
         }
     }
     return(
-        <View className='flex-1 items-center justify-center bg-gray-300'>
-            <View className='p-4 w-10/12 rounded-md space-y-2 bg-white shadow-md'>
+        <View className='h-screen flex-1 items-center justify-center bg-white'>
+            <View className='p-4 w-full rounded-md space-y-2'>
                 <Image 
                     source={require('../../assets/images/splash.jpg')}
-                    style={{ width: 100, height: 100 }}
+                    style={{ width: 150, height: 150 }}
                     className='mx-auto rounded-full'
                 />
 
