@@ -12,6 +12,8 @@ import Appointments from '../pages/Appointments';
 import AppointmentsAllPatient from '../pages/AppointmentsAllPatient';
 import AppointmentDetails from '../pages/AppointmentDetails';
 import VerifyEmail from '../pages/VerifyEmail';
+import Ambulences from '../pages/Ambulences';
+import BloodBank from '../pages/BloodBank';
 
 
 export default function AppNavigator(){
@@ -21,6 +23,8 @@ export default function AppNavigator(){
             <Stack.Navigator>
                 <Stack.Screen name='Spalash' component={Splash} options={{headerShown : false}}/>
                 <Stack.Screen name='Main' component={DrawerNavigator} options={{headerShown : false}}/>
+                <Stack.Screen name='Ambulances' component={Ambulences} />
+                <Stack.Screen name='Blood Bank' component={BloodBank} />
                 <Stack.Screen name='Appointment' component={Appointment} />
                 <Stack.Screen name='All Appointments' component={AppointmentsAllPatient} />
                 <Stack.Screen name='All Appointments Search' component={AppointmentsAllPatientSeach} />
