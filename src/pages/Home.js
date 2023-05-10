@@ -9,7 +9,7 @@ export default function Home({navigation}) {
     const last = servicesData.length
     return (
         <ScrollView className='bg-white px-2'>
-            
+            {/* --------------hero section--------------- */}
             <ImageBackground 
                 source={require('../../assets/images/appointment.jpg')} 
                 className='relative flex-1 bg-cover h-40 rounded-md'>
@@ -29,6 +29,8 @@ export default function Home({navigation}) {
                     </View>
                 </View>
             </ImageBackground>
+
+            {/* --------------slide carousel section--------------- */}
             <View className=''>
                 <Carousel
                     loop
@@ -64,11 +66,14 @@ export default function Home({navigation}) {
                     )}
                 />
             </View>
+
+            {/* --------------servive section--------------- */}
             <View className=' border rounded-md border-blue-500'>
                 <Text className='bg-blue-500/90 text-white text-center p-2'>Services</Text>
                 <View className='flex-1 flex-row flex-wrap justify-around'>
                     {
                         servicesData.map((service) =><TouchableOpacity
+                            key={service.id}
                             onPress={()=> navigation.navigate(service?.page)} 
                             className={`w-[120px] bg-blue-50 rounded-lg m-2 space-y-2 p-2 grow shadow-md`}
                         >

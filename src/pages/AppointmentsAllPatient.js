@@ -181,7 +181,7 @@ export default function AppointmentsAllPatient({route,navigation}) {
                                 {appointment?.status}
                             </Text>
                         </View>
-                        <HStack className='w-full flex justify-end space-x-1 mt-2'>
+                        <ScrollView horizontal={true} className='space-x-1 mt-2'>
                             <TouchableOpacity
                                 onPress={()=>completeAppointment(appointment._id)} 
                                 className='bg-green-500 px-4 py-2 rounded-md'
@@ -206,7 +206,7 @@ export default function AppointmentsAllPatient({route,navigation}) {
                             >
                                 <Text className='text-white'>Details</Text>
                             </TouchableOpacity>
-                        </HStack>
+                        </ScrollView>
                     </View>)
                 }
            </View> 

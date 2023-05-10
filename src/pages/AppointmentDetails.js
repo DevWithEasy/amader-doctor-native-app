@@ -268,11 +268,11 @@ export default function AppointmentDetails({route}){
                 <Text>Print Details</Text>
               </TouchableOpacity>
               
-              <TouchableOpacity onPress={printToFile}
+              {/* <TouchableOpacity onPress={printToFile}
                 className='p-2 border border-blue-500 rounded-md'
               >
                 <Text>Print and Share</Text>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
               
             <View  />
               {Platform.OS === 'ios' && (

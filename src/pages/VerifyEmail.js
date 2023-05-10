@@ -17,7 +17,7 @@ export default function VerifyEmail({navigation}){
         <View className='flex-1 items-center justify-center bg-gray-300'>
             <View className='p-4 w-10/12 rounded-md space-y-2 bg-white shadow-md'>
                 <Image 
-                    source={require('../../assets/images/splash.jpg')}
+                    source={require('../../assets/images/verify_account.png')}
                     style={{ width: 100, height: 100 }}
                     className='mx-auto rounded-full'
                 />
