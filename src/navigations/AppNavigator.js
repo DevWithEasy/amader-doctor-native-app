@@ -14,6 +14,7 @@ import AppointmentDetails from '../pages/AppointmentDetails';
 import VerifyEmail from '../pages/VerifyEmail';
 import Ambulences from '../pages/Ambulences';
 import BloodBank from '../pages/BloodBank';
+import ForgetPassword from '../pages/ForgetPassword';
 
 
 export default function AppNavigator(){
@@ -34,6 +35,7 @@ export default function AppNavigator(){
                 <Stack.Screen name='Payment' component={Payment} />
                 <Stack.Screen name='Payment History' component={PaymentHistory} />
                 <Stack.Screen name='Verify Account' component={VerifyEmail} />
+                <Stack.Screen name='Forget Password' component={ForgetPassword} />
             </Stack.Navigator>
         </NavigationContainer>
     )
